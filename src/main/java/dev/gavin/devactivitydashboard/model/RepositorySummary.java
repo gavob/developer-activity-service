@@ -11,14 +11,11 @@ public class RepositorySummary {
     private final String htmlUrl;
     @JsonProperty("description")
     private final String description;
-    @JsonProperty("language")
-    private final String language;
 
-    public RepositorySummary(Integer id, String fullName, String htmlUrl, String description, String language) {
+    public RepositorySummary(Integer id, String fullName, String htmlUrl, String description) {
         this.id = id;
         this.fullName = fullName;
         this.htmlUrl = htmlUrl;
         this.description = description;
-        this.language = language;
     }
 }
