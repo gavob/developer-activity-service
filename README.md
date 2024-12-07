@@ -8,9 +8,6 @@ into a format that the frontend can use to construct charts
 and graphs for insight into recent developer activity within 
 the repository. 
 
-Frontend application:
-https://github.com/gavob/development-activity-frontend
-
 ## Prerequisites
 
 Java (Version 21 LTS)
@@ -31,6 +28,12 @@ the project
 - Run `mvn spring-boot:run` to start the application on 
 default port http://localhost:8080/
 
+## Usage
+
+This service is used by the frontend application
+https://github.com/gavob/development-activity-frontend
+follow the README for setup and run this application
+
 ### Endpoints:
  
 GET `/dev_activity/search_repos/{search_term}` Returns short 
@@ -40,3 +43,5 @@ search term
 GET `/dev_activity/repo_details/{owner}/{name}` Returns an
 object with analysis data for displaying repository activity
 in various charts
+
+
