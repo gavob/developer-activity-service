@@ -31,6 +31,12 @@ public class GitHubApiService {
         this.gitHubClient = gitHubClient;
     }
 
+    /**
+     * Queries GitHub API for list of repositories which contain the
+     * search term parameter in their name
+     * @param searchTerm   String containing the search term
+     * @return List of RepositorySummary
+     */
     public List<RepositorySummary> searchPublicRepos(String searchTerm) {
         final RepositorySearchResult searchResult = queryApiObjectData(String.format(SEARCH_REPOSITORIES_PATH, SEARCH_PAGE_SIZE, searchTerm),
                 RepositorySearchResult.class);
@@ -42,6 +48,13 @@ public class GitHubApiService {
         return searchResult.getItems();
     }
 
+    /**
+     * Makes multiple API calls to GitHub getting repository activity data and returns
+     * the data formatted for analysis
+     * @param owner     String representing repo owners name
+     * @param name      String representing repo name
+     * @return RepositoryAnalysis instance
+     */
     public RepositoryAnalysis getRepositoryAnalysis(String owner, String name) {
         final Repository repository = queryApiObjectData(String.format(REPOSITORY_PATH, owner, name), Repository.class);
         final List<Commit> commits = queryApiListData(String.format(COMMITS_PATH, owner, name, PAGE_SIZE), Commit.class);
