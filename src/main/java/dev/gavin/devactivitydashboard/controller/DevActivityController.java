@@ -1,7 +1,7 @@
 package dev.gavin.devactivitydashboard.controller;
 
-import dev.gavin.devactivitydashboard.model.RepositoryAnalysis;
-import dev.gavin.devactivitydashboard.model.RepositorySummary;
+import dev.gavin.devactivitydashboard.model.analysis.RepositoryAnalysis;
+import dev.gavin.devactivitydashboard.model.github.RepositorySummary;
 import dev.gavin.devactivitydashboard.service.GitHubApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package dev.gavin.devactivitydashboard.model;
+package dev.gavin.devactivitydashboard.model.github;
 
 public class Label {
     private final String name;

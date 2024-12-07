@@ -1,4 +1,4 @@
-package dev.gavin.devactivitydashboard.model;
+package dev.gavin.devactivitydashboard.model.github;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package dev.gavin.devactivitydashboard.model;
+package dev.gavin.devactivitydashboard.model.github;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
