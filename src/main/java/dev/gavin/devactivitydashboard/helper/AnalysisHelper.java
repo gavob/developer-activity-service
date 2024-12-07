@@ -14,6 +14,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class AnalysisHelper {
+    /**
+     * Constructs a RepositoryAnalysis instance using the given repository data. The data contained in
+     * the analysis is processed into three primary formats which are required by the charts used by
+     * the client:
+     *      DayCounter (Parameters: x, y) for displaying occurrences by date on Line & Scatter charts
+     *      NameValue (Parameters: name, value) for displaying occurrences by label on Circle Packing chart
+     *      TimeLength (Parameters: id, time) for displaying times sequentially in a Bar chart
+     * @param repository            Repository basic information
+     * @param commits               List of Commits
+     * @param comments              List of Comments
+     * @param pullRequests          List of Pull Requests
+     * @param releases              List of Releases
+     * @param issues                List of Issues
+     * @param closedPullRequests    List of Pull Requests in the closed state
+     * @param closedIssues          List of Issues in the closed state
+     * @return repositoryAnalysis
+     */
     public static RepositoryAnalysis buildRepositoryAnalysis(Repository repository,
                                                        List<Commit> commits,
                                                        List<Comment> comments,
