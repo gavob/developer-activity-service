@@ -2,13 +2,13 @@ package dev.gavin.devactivitydashboard.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class Contributor {
+public class IssueType {
     @JsonProperty("name")
     private final String name;
     @JsonProperty("value")
     private final Integer value;
 
-    public Contributor(String name, Integer value) {
+    public IssueType(String name, Integer value) {
         this.name = name;
         this.value = value;
     }

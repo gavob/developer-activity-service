@@ -34,10 +34,9 @@ class TestGitHubApiService {
 
     @Test
     void testSearchPublicReposReturnsItems() {
-        RepositorySummary repositorySummary1 = new RepositorySummary(1, "repo 1", "", "", "");
-        RepositorySummary repositorySummary2 = new RepositorySummary(2, "repo 2", "", "", "");
-        RepositorySearchResult searchResult = new RepositorySearchResult(2, false,
-                List.of(repositorySummary1, repositorySummary2));
+        RepositorySummary repositorySummary1 = new RepositorySummary(1, "repo 1", "", "");
+        RepositorySummary repositorySummary2 = new RepositorySummary(2, "repo 2", "", "");
+        RepositorySearchResult searchResult = new RepositorySearchResult(List.of(repositorySummary1, repositorySummary2));
 
         when(responseSpec.bodyToMono(RepositorySearchResult.class)).thenReturn(Mono.just(searchResult));
 
@@ -49,7 +48,7 @@ class TestGitHubApiService {
 
     @Test
     void testSearchPublicReposReturnsEmptyListOnNullResults() {
-        RepositorySearchResult searchResult = new RepositorySearchResult(0, false, null);
+        RepositorySearchResult searchResult = new RepositorySearchResult(null);
 
         when(responseSpec.bodyToMono(RepositorySearchResult.class)).thenReturn(Mono.just(searchResult));
 
