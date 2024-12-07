@@ -1,14 +1,14 @@
 package dev.gavin.devactivitydashboard.service;
 
-import dev.gavin.devactivitydashboard.model.*;
+import dev.gavin.devactivitydashboard.helper.AnalysisHelper;
+import dev.gavin.devactivitydashboard.model.analysis.RepositoryAnalysis;
+import dev.gavin.devactivitydashboard.model.github.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Collections;
 
 @Service
 public class GitHubApiService {
@@ -52,7 +52,7 @@ public class GitHubApiService {
         final List<PullRequest> closedPullRequests = queryApiListData(String.format(CLOSED_PULL_REQUESTS_PATH, owner, name, PAGE_SIZE), PullRequest.class);
         final List<Issue> closedIssues = queryApiListData(String.format(CLOSED_ISSUES_PATH, owner, name, PAGE_SIZE), Issue.class);
 
-        return buildRepositoryAnalysis(repository, commits, comments, pullRequests, releases, issues, closedPullRequests, closedIssues);
+        return AnalysisHelper.buildRepositoryAnalysis(repository, commits, comments, pullRequests, releases, issues, closedPullRequests, closedIssues);
     }
 
     private <T> T queryApiObjectData(String uri, Class<T> classType) {
@@ -70,90 +70,5 @@ public class GitHubApiService {
                 .bodyToFlux(classType)
                 .collectList()
                 .block();
-    }
-
-    private RepositoryAnalysis buildRepositoryAnalysis(Repository repository,
-                                                       List<Commit> commits,
-                                                       List<Comment> comments,
-                                                       List<PullRequest> pullRequests,
-                                                       List<Release> releases,
-                                                       List<Issue> issues,
-                                                       List<PullRequest> closedPullRequests,
-                                                       List<Issue> closedIssues) {
-        final RepositoryAnalysis repositoryAnalysis = new RepositoryAnalysis(repository);
-
-        final Map<LocalDate, Integer> commitFrequencies = commits.stream()
-                .collect(Collectors.toMap(commit -> commit.getCommit().getCommitter().getDate().toLocalDate(),
-                        (counter) -> 1, Integer::sum));
-        repositoryAnalysis.getCommits().addAll(commitFrequencies.keySet().stream()
-                .map(date -> new DateFrequency(date, commitFrequencies.get(date)))
-                .sorted(Comparator.comparing(DateFrequency::getDate))
-                .toList());
-
-        final Map<LocalDate, Integer> commentFrequencies = comments.stream()
-                .collect(Collectors.toMap(comment -> comment.getCreatedAt().toLocalDate(),
-                        (counter) -> 1, Integer::sum));
-        repositoryAnalysis.getComments().addAll(commentFrequencies.keySet().stream()
-                .map(date -> new DateFrequency(date, commentFrequencies.get(date)))
-                .sorted(Comparator.comparing(DateFrequency::getDate))
-                .toList());
-
-        final Map<LocalDate, Integer> pullRequestFrequencies = pullRequests.stream()
-                .collect(Collectors.toMap(pullRequest -> pullRequest.getCreatedAt().toLocalDate(),
-                        (counter) -> 1, Integer::sum));
-        repositoryAnalysis.getPullRequests().addAll(pullRequestFrequencies.keySet().stream()
-                .map(date -> new DateFrequency(date, pullRequestFrequencies.get(date)))
-                .sorted(Comparator.comparing(DateFrequency::getDate))
-                .toList());
-
-        final Map<LocalDate, Integer> issueFrequencies = issues.stream()
-                .collect(Collectors.toMap(issue -> issue.getCreatedAt().toLocalDate(),
-                        (counter) -> 1, Integer::sum));
-        repositoryAnalysis.getIssues().addAll(issueFrequencies.keySet().stream()
-                .map(date -> new DateFrequency(date, issueFrequencies.get(date)))
-                .sorted(Comparator.comparing(DateFrequency::getDate))
-                .toList());
-
-        final Map<LocalDate, Integer> releaseFrequencies = releases.stream()
-                .collect(Collectors.toMap(release -> release.getPublishedAt().toLocalDate(),
-                        (counter) -> 1, Integer::sum));
-        repositoryAnalysis.getReleases().addAll(releaseFrequencies.keySet().stream()
-                .map(date -> new DateFrequency(date, releaseFrequencies.get(date)))
-                .sorted(Comparator.comparing(DateFrequency::getDate))
-                .toList());
-
-        repositoryAnalysis.getPullRequestMergeTimes().addAll(closedPullRequests.stream()
-                .filter(pull -> pull.getMergedAt() != null)
-                .sorted(Comparator.comparing(PullRequest::getNumber))
-                .map(pull -> new MergeTime(pull.getNumber(), ChronoUnit.HOURS.between(pull.getCreatedAt(), pull.getMergedAt())))
-                .toList());
-
-        repositoryAnalysis.getIssueCloseTimes().addAll(closedIssues.stream()
-                .sorted(Comparator.comparing(Issue::getNumber))
-                .map(issue -> new IssueTime(issue.getNumber(), ChronoUnit.HOURS.between(issue.getCreatedAt(), issue.getClosedAt())))
-                .toList());
-
-        final Map<String, Integer> activeContributors = closedPullRequests.stream()
-                .map(pullRequest -> pullRequest.getUser().getLogin())
-                .collect(Collectors.toMap(login -> login, (counter) -> 1, Integer::sum));
-
-        repositoryAnalysis.getActiveContributors().addAll(activeContributors.keySet().stream()
-                .sorted((n1, n2) -> activeContributors.get(n2).compareTo(activeContributors.get(n1)))
-                .limit(15)
-                .map(name -> new Contributor(name, activeContributors.get(name)))
-                .toList());
-
-        final Map<String, Integer> issueTypes = issues.stream()
-                .flatMap(issue -> issue.getLabels().stream())
-                .map(Label::getName)
-                .collect(Collectors.toMap(label -> label, (counter) -> 1, Integer::sum));
-
-        repositoryAnalysis.getIssueTypes().addAll(issueTypes.keySet().stream()
-                .sorted((l1, l2) -> issueTypes.get(l2).compareTo(issueTypes.get(l1)))
-                .limit(15)
-                .map(label -> new IssueType(label, issueTypes.get(label)))
-                .toList());
-
-        return repositoryAnalysis;
     }
 }
