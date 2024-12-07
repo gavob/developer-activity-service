@@ -1,14 +1,14 @@
-package dev.gavin.devactivitydashboard.model;
+package dev.gavin.devactivitydashboard.model.analysis;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class MergeTime {
+public class TimeLength {
     @JsonProperty("id")
     private final Integer id;
     @JsonProperty("time")
     private final Long time;
 
-    public MergeTime(Integer id, Long time) {
+    public TimeLength(Integer id, Long time) {
         this.id = id;
         this.time = time;
     }

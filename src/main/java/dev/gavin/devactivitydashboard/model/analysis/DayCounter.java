@@ -1,16 +1,16 @@
-package dev.gavin.devactivitydashboard.model;
+package dev.gavin.devactivitydashboard.model.analysis;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 
-public class DateFrequency {
-    @JsonProperty("y")
-    private final Integer value;
+public class DayCounter {
     @JsonProperty("x")
     private final LocalDate date;
+    @JsonProperty("y")
+    private final Integer value;
 
-    public DateFrequency(LocalDate date, Integer value) {
+    public DayCounter(LocalDate date, Integer value) {
         this.date = date;
         this.value = value;
     }
