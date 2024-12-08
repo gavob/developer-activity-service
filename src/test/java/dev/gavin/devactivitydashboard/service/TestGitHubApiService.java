@@ -1,7 +1,7 @@
 package dev.gavin.devactivitydashboard.service;
 
-import dev.gavin.devactivitydashboard.model.RepositorySearchResult;
-import dev.gavin.devactivitydashboard.model.RepositorySummary;
+import dev.gavin.devactivitydashboard.model.github.RepositorySearchResult;
+import dev.gavin.devactivitydashboard.model.github.RepositorySummary;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
